@@ -1,0 +1,285 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#define H 19
+#define W 38
+
+	int randnum(int min,int max)
+	{
+		srand(time(NULL));
+		
+		return rand() % ((max+1) - min) + min;
+		
+	}
+	
+char harita[H][W] =
+{
+   { "######################################" },
+   { "#                                    #" },                             
+   { "# ########### ########### ########## #" },                                               
+   { "# #         # #         # #          #" },       
+   { "# # ####### # # ####### # # ######## #" },  
+   { "# #         # # ####### # # ######## #" }, 
+   { "# # ######### #         # # ######## #" }, 
+   { "# # ######### # ####### # #          #" }, 
+   { "# # ######### # ####### # ########## #" }, 
+   { "#                                    #" },
+   { "# ############# ########## ######### #" },        
+   { "# #           # #        # #    ##   #" },      
+   { "# # ### # ### # # ###### # # ## ## # #" },         
+   { "# # ### # ### # # ###### # # ## ## # #" },
+   { "# # ### # ### # #        # # ## ## # #" },                                    
+   { "# # ### # ### # # ###### # # ## ## # #" },
+   { "# # ### # ### # # ###### # # ## ## # #" },
+   { "#                                    #" },
+   { "######################################" }
+};
+
+struct Bilgi{
+	
+	int konumX;
+	int konumY;
+	int hareketX;
+	int hareketY;
+	int yon;
+		}Canavar,PacMan;
+		
+	int baslangic,*pbaslangic;
+	*pbaslangic=&baslangic;
+	
+	
+	int skor=0;
+
+	int yem = 0;
+
+	void haritaOlustur() {
+	
+	usleep(200000);
+	
+	int i,j;
+
+	system("cls");
+		
+	for(i = 0; i < H; i++) {
+
+		for(j = 0; j < W; j++) {
+
+			printf("%c", harita[i][j]);		
+		}
+
+		printf("\n");
+	}	
+	
+	printf("Skor: %d\n", skor);
+}
+
+int  canavar() {	
+	
+     	int dizi[4],sayac=0,i=0,tmpX,tmp2X,tmpY,tmp2Y;
+		
+		if(*pbaslangic==-1)
+		{
+			tmpX=Canavar.konumX;
+			tmpY=Canavar.konumY;
+			tmp2X=-1;
+			tmp2Y=-1;	
+			*pbaslangic++;
+		}
+		
+		int kontrolY = Canavar.konumY - 1; 
+		int kontrolX = Canavar.konumX ;
+		
+		if((tmp2Y!=kontrolY)&&(harita[kontrolY][kontrolX] != '#') && (harita[kontrolY][kontrolX] != '+') ) {
+	
+			sayac+=1;		
+			dizi[i]=1;	
+			i++;	
+		}	
+		
+		kontrolY = Canavar.konumY + 1; 
+		kontrolX = Canavar.konumX ;
+		
+		if((tmp2Y!=kontrolY)&&(harita[kontrolY][kontrolX] != '#') && (harita[kontrolY][kontrolX] != '+') ) {
+	
+			sayac+=1;		
+			dizi[i]=2;	
+			i++;	
+		}	
+		
+		kontrolY = Canavar.konumY;
+		kontrolX = Canavar.konumX - 1;
+		
+		if((tmp2X!=kontrolX)&&(harita[kontrolY][kontrolX] != '#') && (harita[kontrolY][kontrolX] != '+') ) {
+	
+			sayac+=1;		
+			dizi[i]=3;	
+			i++;	
+		}
+		
+		kontrolY = Canavar.konumY;
+		kontrolX = Canavar.konumX + 1;
+		
+		if((tmp2X!=kontrolX)&&(harita[kontrolY][kontrolX] != '#') && (harita[kontrolY][kontrolX] != '+') ) {
+	
+			sayac+=1;		
+			dizi[i]=4;	
+		}
+		
+		int sayi=randnum(0,sayac-1);
+		
+		switch(dizi[sayi]) {
+		
+		case 1:
+			Canavar.hareketX = 0;
+			Canavar.hareketY = -1;
+			break;
+			
+		case 2:
+			Canavar.hareketX = 0;
+			Canavar.hareketY = 1;
+			break;
+		
+		case 3:
+			Canavar.hareketX = -1;
+			Canavar.hareketY = 0;
+			break;
+			
+		case 4:
+			Canavar.hareketX = 1;         
+			Canavar.hareketY = 0;
+			break;				
+			
+		}
+		
+		kontrolX = Canavar.konumX + Canavar.hareketX;
+		kontrolY = Canavar.konumY + Canavar.hareketY;
+		
+		
+		if(harita[kontrolY][kontrolX] == '@') {
+		
+		return 0;		
+				
+		} else {
+		
+		
+    	harita[Canavar.konumY][Canavar.konumX] =' ';		
+		
+		Canavar.konumX += Canavar.hareketX;
+		Canavar.konumY += Canavar.hareketY;
+		
+		harita[Canavar.konumY][Canavar.konumX] ='&';
+		
+		
+		if(*pbaslangic!=-1)
+		{
+		tmp2X=tmpX;
+		tmp2Y=tmpY;	
+		tmpX=Canavar.konumX;
+		tmpY=Canavar.konumY;
+		}	
+	}
+				
+	
+}
+
+int pacMan() {
+
+	int kontrolX, kontrolY;
+
+	kontrolX = PacMan.konumX + PacMan.hareketX;
+	kontrolY = PacMan.konumY + PacMan.hareketY;
+
+	if(harita[kontrolY][kontrolX] == '#') {
+
+		PacMan.hareketX = 0;
+		PacMan.hareketY = 0;	
+
+	} 
+	
+	if(harita[kontrolY][kontrolX] == '&') {
+		
+		return 0;				
+	}
+	
+	else {
+		
+		harita[PacMan.konumY][PacMan.konumX] = ' ';
+		
+		PacMan.konumX += PacMan.hareketX;
+		PacMan.konumY += PacMan.hareketY;
+		
+		if(harita[PacMan.konumY][PacMan.konumX] == '+') {
+		
+		skor++;
+		yem = 0;
+				
+		}
+							
+		harita[PacMan.konumY][PacMan.konumX] = '@';						
+	}
+	
+}
+
+void PacMan_hareket() {
+
+	if(kbhit()){
+
+		switch(getch()) {
+
+			case 'w':
+				PacMan.hareketX = 0;
+				PacMan.hareketY = -1;
+		  		break;
+
+		  	case 's':
+				PacMan.hareketX = 0;
+				PacMan.hareketY = +1;
+		  		break;
+
+		  	case 'a':
+				PacMan.hareketX = -1;
+				PacMan.hareketY = 0;
+		  		break;
+
+		  	case 'd':
+				PacMan.hareketX = +1;
+				PacMan.hareketY = 0;
+		  		break;				
+		}
+	}
+		
+}		
+
+int main() {
+
+	int x, y;
+	
+	*pbaslangic=1;
+	
+	PacMan.konumX = 15;
+	PacMan.konumY = 17;
+	PacMan.hareketX = 0;
+	PacMan.hareketY = 0;
+	
+	Canavar.konumX = 10;
+	Canavar.konumY = 11;
+	Canavar.hareketX = 0;
+	Canavar.hareketY = 0;
+	Canavar.yon = 0;
+
+	while(1) {
+
+		haritaOlustur();
+		y = canavar();
+		x = pacMan();
+		PacMan_hareket();
+		
+		if(x == 0 || y == 0) {
+			
+			return 0;
+			
+		}
+	}
+}
