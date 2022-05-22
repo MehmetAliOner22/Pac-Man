@@ -506,7 +506,11 @@ int InputaGoreIslemYap() {
 				PacMan.pacMan.sutunYonundeHareket = +1;
 				PacMan.pacMan.satirYonundeHareket = 0;
 				return 0;
-		  		break;		  			
+		  		break;	
+	  
+			default :
+				return 0;
+				break;	  			
 		}
 	}		
 }	
